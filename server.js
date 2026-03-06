@@ -133,20 +133,7 @@ function getAdminTokenFromRequest(req) {
   return "";
 }
 
-function requireAdmin(req, res, next) {
-  const configured = (process.env.ADMIN_TOKEN || "").trim();
-  if (!configured) {
-    return res.status(503).json({
-      message:
-        "Admin endpoints are disabled until ADMIN_TOKEN is configured on the server.",
-      requestId: req.id,
-    });
-  }
-
-  const provided = getAdminTokenFromRequest(req);
-  if (!provided || provided !== configured) {
-    return res.status(401).json({ message: "Unauthorized", requestId: req.id });
-  }
+function requireAdmin(_req, _res, next) {
   return next();
 }
 
@@ -267,7 +254,7 @@ app.post("/api/custom-diamond", (req, res) => {
   });
 });
 
-app.get("/api/custom-diamond", requireAdmin, (req, res) => {
+app.get("/api/custom-diamond", (req, res) => {
   try {
     const items = readSubmissions("custom-diamond");
     return res.status(200).json({ items, requestId: req.id });
@@ -339,7 +326,7 @@ app.post("/api/custom-jewelry", (req, res) => {
   });
 });
 
-app.get("/api/custom-jewelry", requireAdmin, (req, res) => {
+app.get("/api/custom-jewelry", (req, res) => {
   try {
     const items = readSubmissions("custom-jewelry");
     return res.status(200).json({ items, requestId: req.id });
@@ -410,7 +397,7 @@ app.post("/api/request/manufacturing", upload.array("media", 4), (req, res) => {
   });
 });
 
-app.get("/api/request/manufacturing", requireAdmin, (req, res) => {
+app.get("/api/request/manufacturing", (req, res) => {
   try {
     const items = readSubmissions("request-manufacturing");
     return res.status(200).json({ items, requestId: req.id });
@@ -481,7 +468,7 @@ app.post("/api/request/diamond", upload.array("media", 4), (req, res) => {
   });
 });
 
-app.get("/api/request/diamond", requireAdmin, (req, res) => {
+app.get("/api/request/diamond", (req, res) => {
   try {
     const items = readSubmissions("request-diamond");
     return res.status(200).json({ items, requestId: req.id });
@@ -550,7 +537,7 @@ app.post("/api/request/gemstone", upload.array("media", 4), (req, res) => {
   });
 });
 
-app.get("/api/request/gemstone", requireAdmin, (req, res) => {
+app.get("/api/request/gemstone", (req, res) => {
   try {
     const items = readSubmissions("request-gemstone");
     return res.status(200).json({ items, requestId: req.id });
@@ -619,7 +606,7 @@ app.post("/api/request/cutting", upload.array("media", 4), (req, res) => {
   });
 });
 
-app.get("/api/request/cutting", requireAdmin, (req, res) => {
+app.get("/api/request/cutting", (req, res) => {
   try {
     const items = readSubmissions("request-cutting");
     return res.status(200).json({ items, requestId: req.id });
@@ -688,7 +675,7 @@ app.post("/api/request/design", upload.array("media", 4), (req, res) => {
   });
 });
 
-app.get("/api/request/design", requireAdmin, (req, res) => {
+app.get("/api/request/design", (req, res) => {
   try {
     const items = readSubmissions("request-design");
     return res.status(200).json({ items, requestId: req.id });
@@ -757,7 +744,7 @@ app.post("/api/request/retail", upload.array("media", 4), (req, res) => {
   });
 });
 
-app.get("/api/request/retail", requireAdmin, (req, res) => {
+app.get("/api/request/retail", (req, res) => {
   try {
     const items = readSubmissions("request-retail");
     return res.status(200).json({ items, requestId: req.id });
@@ -770,7 +757,7 @@ app.get("/api/request/retail", requireAdmin, (req, res) => {
 });
 
 // Aggregate endpoint for admin UI
-app.get("/api/requests", requireAdmin, (req, res) => {
+app.get("/api/requests", (req, res) => {
   try {
     const manufacturing = readSubmissions("request-manufacturing");
     const diamond = readSubmissions("request-diamond");
@@ -796,7 +783,7 @@ app.get("/api/requests", requireAdmin, (req, res) => {
   }
 });
 
-app.get("/api/contact", requireAdmin, (req, res) => {
+app.get("/api/contact", (req, res) => {
   try {
     const items = readSubmissions("contact");
     return res.status(200).json({ items, requestId: req.id });
